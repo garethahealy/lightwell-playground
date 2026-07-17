@@ -1,0 +1,44 @@
+name: Run pre-commit
+
+on: [ push, pull_request ]
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    name: pre-commit
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: 3.x
+
+      - name: Remove rh-pre-commit hook (requires VPN)
+        uses: mikefarah/yq@1b9b4ac5187171d2e5e3129be0cfa827c7f9d53d # v4.53.3
+        with:
+          cmd: yq -i 'del( .repos[] | select(.rev == "rh-pre-commit-*"))' .pre-commit-config.yaml
+
+      - uses: garethahealy/pre-commit-action@c93005939a88ad60af0f8334b1e42ab91c30ad75 # v4.6.0
+
+      - name: Check if there are changes
+        id: changes
+        run: |
+          git checkout HEAD -- .pre-commit-config.yaml
+          echo "changed=$(git status --porcelain | wc -l)" >> $GITHUB_OUTPUT
+
+      - name: Fail if changes found
+        if: steps.changes.outputs.changed >= 1
+        run: |
+          echo "Uncommitted changes exist. Failing."
+          echo
+          git status --porcelain
+          exit 1
