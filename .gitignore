@@ -4,4 +4,7 @@
 target/
 .m2/*
 !.m2/settings.xml
-scripts/
+/scripts/
+
+__pycache__/
+*.py[cod]

@@ -5,5 +5,14 @@
     ":enablePreCommit",
     "schedule:earlyMondays"
   ],
-  "timezone": "Etc/UTC"
+  "timezone": "Etc/UTC",
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "commons-io:commons-io",
+        "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
+      ],
+      "enabled": false
+    }
+  ]
 }
