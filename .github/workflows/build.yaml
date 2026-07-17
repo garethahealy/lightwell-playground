@@ -1,0 +1,80 @@
+name: "Build and Analyze"
+
+on: [ push, pull_request ]
+
+# Declare default permissions as read only.
+permissions: read-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: "temurin"
+          java-version: 25
+          cache: "maven"
+
+      - name: Build
+        env:
+          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
+          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
+        run: mvn clean install --batch-mode --settings=.m2/settings.xml
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          file: pom.xml
+
+  analyze:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: write
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@b09bb98e06d4d774595224525879c09bc6e98c40 # v2.20.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: "temurin"
+          java-version: 25
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        with:
+          languages: java
+
+      - name: manual build
+        env:
+          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
+          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
+        run: mvn clean install --batch-mode --settings=.m2/settings.xml
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        with:
+          category: "/language:java"
+
+      - name: Submit Dependency Snapshot
+        uses: advanced-security/maven-dependency-submission-action@b275d12641ac2d2108b2cbb7598b154ad2f2cee8 # v5
