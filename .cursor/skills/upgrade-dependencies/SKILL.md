@@ -10,7 +10,7 @@ description: >-
 
 # Upgrade Dependencies
 
-Upgrade managed Maven dependencies and plugins in this repo's `pom.xml`. 
+Upgrade managed Maven dependencies and plugins in this repo's `pom.xml`.
 Prefer Red Hat Lightwell artifacts from [packages.redhat.com](https://packages.redhat.com/) over Maven Central when Lightwell coverage exists.
 
 **Scope:** `pom.xml` only (dependencies, plugins, version properties). Do not bump `.pre-commit-config.yaml` or other non-Maven manifests unless the user asks.
@@ -48,7 +48,7 @@ echo "CREDS_OK"
 
 If sourcing fails or auth fails, say credentials are missing/invalid **without** inspecting the file. Ask the user to fix `scripts/_creds.sh` locally.
 
-**CI parity:** Local auth is `source scripts/_creds.sh`. CI (`.github/workflows/build.yaml`) sets the same env names from GitHub Actions secrets (`LIGHTWELL_USERNAME`, `LIGHTWELL_TOKEN`) without that file. 
+**CI parity:** Local auth is `source scripts/_creds.sh`. CI (`.github/workflows/build.yaml`) sets the same env names from GitHub Actions secrets (`LIGHTWELL_USERNAME`, `LIGHTWELL_TOKEN`) without that file.
 Same Maven flags and `--settings=.m2/settings.xml` either way — do not invent a second auth or settings path.
 
 ## Workflow
@@ -99,7 +99,7 @@ Do not scrape packages.redhat.com or console.redhat.com HTML for versions — us
 
 #### Dependencies (Lightwell first)
 
-For **each inventoried** dependency coordinate (do not hardcode GAVs from examples), resolve in parallel in one shell. 
+For **each inventoried** dependency coordinate (do not hardcode GAVs from examples), resolve in parallel in one shell.
 Prefer `--latest` so only a version string is printed:
 
 ```bash
@@ -178,7 +178,7 @@ grep -E 'Downloaded from lightwell-(remediated|validated):' "$log" || true
 rm -f "$log"
 ```
 
-Fix resolve/compile failures before finishing. Never dump env while debugging. 
+Fix resolve/compile failures before finishing. Never dump env while debugging.
 Do not escalate to `mvn -X`, `set -x`, or credential-expanding commands — report auth/build failure without inspecting secret values.
 
 ### 5. Summarize
