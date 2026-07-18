@@ -15,17 +15,23 @@
     </properties>
 
     <dependencies>
-        <!-- https://console.redhat.com/lightwell/java-remediated/org.json/json -->
+        <!-- Source: https://packages.redhat.com/lightwell/java/remediated/ -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20220320.0.0.rhlw-00001</version>
         </dependency>
 
-        <!-- https://console.redhat.com/lightwell/java-validated/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
+        <!-- Source: https://packages.redhat.com/lightwell/java/validated/ -->
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.19.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-csv</artifactId>
             <version>2.19.4</version>
         </dependency>
     </dependencies>
