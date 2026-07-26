@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20220320.0.0.rhlw-00001</version>
+            <version>20220320.0.0.rhlw-00003</version>
         </dependency>
 
         <!-- Source: https://packages.redhat.com/lightwell/java/validated/ -->
