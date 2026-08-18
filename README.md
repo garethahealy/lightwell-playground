@@ -13,10 +13,15 @@ mvn clean install --batch-mode --settings=.m2/settings.xml
 
 ## Renovate
 
+[renovate](renovate.json) can be configured to look at the Lightwell, hosts per:
+
 <img src="renovate-config.png" alt="renovate config" width="500" />
 <br>
 <img src="renovate-hostrules.png" alt="renovate host rules" width="500" />
 
+## Dependabot
+
+If you are not using renovate, [dependabot](.github/dependabot.yml) can also provide similar functionality.
 ## AI skills
 
 Shared helpers: [/lightwell-shared](.cursor/skills/lightwell-shared/packages-redhat.md).
