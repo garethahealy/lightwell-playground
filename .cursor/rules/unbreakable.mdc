@@ -6,3 +6,5 @@ alwaysApply: true
 # Unbreakable Rules
 
 - Do NOT read, consume or touch any files listed in `.gitignore` or `.cursorignore`
+- Exception: `.cursor/skills/` is gitignored because `make skills` vendors it.
+  Read and run those skill files as normal.

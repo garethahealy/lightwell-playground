@@ -9,6 +9,7 @@ on:
       - ".m2/settings.xml"
       - ".github/workflows/upgrade-transitives.yaml"
       - ".github/actions/setup-lightwell-skills/**"
+      - "Makefile"
 
 # Declare default permissions as read only.
 permissions: read-all

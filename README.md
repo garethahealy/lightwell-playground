@@ -32,7 +32,7 @@ This repo copies them into `.cursor/skills` (gitignored). Invoke
 
 ### Local
 
-Each run removes `.cursor/skills` and clones a fresh copy (no symlink):
+Each run removes `.cursor/skills` and clones a fresh copy:
 
 ```bash
 make skills
@@ -48,6 +48,6 @@ Creds stay in this repo (`scripts/_creds.sh` or exported `LIGHTWELL_USERNAME` /
 
 ### CI
 
-GitHub Actions checks out `garethahealy/lightwell-skills` and runs the plugin
-scripts against this `pom.xml` (upgrade directs/transitives, verify
-attestations, OSV comments on Renovate PRs).
+GitHub Actions runs `make skills` and then the skill scripts against this
+`pom.xml` (upgrade directs/transitives, verify attestations, OSV comments
+on Renovate PRs).

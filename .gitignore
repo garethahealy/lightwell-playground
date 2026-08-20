@@ -6,6 +6,3 @@ target/
 .m2/*
 !.m2/settings.xml
 /scripts/
-
-__pycache__/
-*.py[cod]

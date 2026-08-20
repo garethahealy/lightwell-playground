@@ -1,5 +1,5 @@
 name: Setup lightwell-skills
-description: Check out garethahealy/lightwell-skills and set LIGHTWELL_SKILLS
+description: Run make skills and set LIGHTWELL_SKILLS
 
 inputs:
   ref:
@@ -10,21 +10,14 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Checkout lightwell-skills
-      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        repository: garethahealy/lightwell-skills
-        ref: ${{ inputs.ref }}
-        path: lightwell-skills
-        persist-credentials: false
-
-    - name: Export LIGHTWELL_SKILLS
+    - name: Vendor lightwell skills
       shell: bash
       run: |
         set -euo pipefail
-        skills="${GITHUB_WORKSPACE}/lightwell-skills/plugins/lightwell/skills"
+        make skills LIGHTWELL_SKILLS_REF="${{ inputs.ref }}"
+        skills="${GITHUB_WORKSPACE}/.cursor/skills"
         if [[ ! -d "${skills}" ]]; then
-          echo "lightwell-skills checkout missing ${skills}" >&2
+          echo "make skills missing ${skills}" >&2
           exit 1
         fi
         echo "LIGHTWELL_SKILLS=${skills}" >> "${GITHUB_ENV}"

@@ -11,7 +11,7 @@ help:
 	@echo "Targets:"
 	@echo "  skills  Remove $(SKILLS_DIR) and clone a fresh copy from lightwell-skills"
 
-# Wipe project skills and copy a fresh checkout of lightwell-skills (no symlink).
+# Wipe project skills and copy a fresh checkout of lightwell-skills.
 skills:
 	@set -euo pipefail; \
 	rm -rf "$(SKILLS_DIR)"; \
