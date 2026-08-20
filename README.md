@@ -22,11 +22,32 @@ mvn clean install --batch-mode --settings=.m2/settings.xml
 ## Dependabot
 
 If you are not using renovate, [dependabot](.github/dependabot.yml) can also provide similar functionality.
+
 ## AI skills
 
-Shared helpers: [/lightwell-shared](.cursor/skills/lightwell-shared/packages-redhat.md).
+Skills live in [garethahealy/lightwell-skills](https://github.com/garethahealy/lightwell-skills).
+This repo copies them into `.cursor/skills` (gitignored). Invoke
+`/upgrade-directs`, `/upgrade-transitives`, `/verify-attestations`, and
+`/add-osv-to-renovate` against this `pom.xml`.
 
-- [/upgrade-directs](.cursor/skills/upgrade-directs) — bump direct `pom.xml` deps (plan → collect → apply → summary)
-- [/upgrade-transitives](.cursor/skills/upgrade-transitives) — promote remediated transitive fixes (plan → collect → apply → summary)
-- [/verify-attestations](.cursor/skills/verify-attestations) — cosign provenance check for Lightwell jars
-- [/add-osv-to-renovate](.cursor/skills/add-osv-to-renovate) — comment OSV data on Renovate PRs
+### Local
+
+Each run removes `.cursor/skills` and clones a fresh copy (no symlink):
+
+```bash
+make skills
+```
+
+Optional ref: `make skills LIGHTWELL_SKILLS_REF=<branch-or-tag>`. Then
+**Developer: Reload Window**. Open **Customize → Skills** and confirm
+`/upgrade-directs`, `/upgrade-transitives`, `/verify-attestations`, and
+`/add-osv-to-renovate`.
+
+Creds stay in this repo (`scripts/_creds.sh` or exported `LIGHTWELL_USERNAME` /
+`LIGHTWELL_TOKEN`).
+
+### CI
+
+GitHub Actions checks out `garethahealy/lightwell-skills` and runs the plugin
+scripts against this `pom.xml` (upgrade directs/transitives, verify
+attestations, OSV comments on Renovate PRs).

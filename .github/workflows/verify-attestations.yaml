@@ -5,8 +5,10 @@ on:
   push:
     branches: [main]
     paths:
-      - ".cursor/skills/**"
+      - "pom.xml"
+      - ".m2/settings.xml"
       - ".github/workflows/verify-attestations.yaml"
+      - ".github/actions/setup-lightwell-skills/**"
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -26,6 +28,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup lightwell-skills
+        uses: ./.github/actions/setup-lightwell-skills
 
       - name: Set up Java
         uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
@@ -54,10 +59,11 @@ jobs:
           LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
-          coords="$(python3 .cursor/skills/lightwell-shared/scripts/coords_from_pom.py --pom pom.xml)"
+          shared="${LIGHTWELL_SKILLS}/lightwell-shared/scripts"
+          coords="$(python3 "${shared}/coords_from_pom.py" --pom pom.xml)"
           if [[ -z "${coords}" ]]; then
             echo "No Lightwell jars to verify in pom.xml"
             exit 0
           fi
           printf '%s\n' "${coords}" \
-            | bash .cursor/skills/lightwell-shared/scripts/verify-attestations.sh --batch
+            | bash "${shared}/verify-attestations.sh" --batch

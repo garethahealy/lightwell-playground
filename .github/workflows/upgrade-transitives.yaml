@@ -5,8 +5,10 @@ on:
   push:
     branches: [main]
     paths:
-      - ".cursor/skills/**"
+      - "pom.xml"
+      - ".m2/settings.xml"
       - ".github/workflows/upgrade-transitives.yaml"
+      - ".github/actions/setup-lightwell-skills/**"
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -27,6 +29,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Setup lightwell-skills
+        uses: ./.github/actions/setup-lightwell-skills
+
       - name: Set up Java
         uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
@@ -45,7 +50,7 @@ jobs:
           LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
-          python3 .cursor/skills/upgrade-transitives/scripts/plan.py \
+          python3 "${LIGHTWELL_SKILLS}/upgrade-transitives/scripts/plan.py" \
             --pom pom.xml --settings=.m2/settings.xml \
             -o /tmp/transitive-plan.json
 
@@ -55,7 +60,7 @@ jobs:
           LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
-          python3 .cursor/skills/upgrade-transitives/scripts/collect.py \
+          python3 "${LIGHTWELL_SKILLS}/upgrade-transitives/scripts/collect.py" \
             --from-plan /tmp/transitive-plan.json \
             -o /tmp/transitive-collect.json
 
@@ -66,7 +71,7 @@ jobs:
           LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
-          python3 .cursor/skills/upgrade-transitives/scripts/apply.py \
+          python3 "${LIGHTWELL_SKILLS}/upgrade-transitives/scripts/apply.py" \
             --from-collect /tmp/transitive-collect.json \
             --include-ask \
             -o /tmp/transitive-apply.json
@@ -77,7 +82,7 @@ jobs:
           LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
-          python3 .cursor/skills/upgrade-transitives/scripts/summary.py \
+          python3 "${LIGHTWELL_SKILLS}/upgrade-transitives/scripts/summary.py" \
             --from-collect /tmp/transitive-collect.json \
             --from-apply /tmp/transitive-apply.json \
             -o /tmp/transitive-summary.md

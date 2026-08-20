@@ -16,6 +16,7 @@ jobs:
     if: github.event.pull_request.user.login == 'renovate[bot]'
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pull-requests: write
     steps:
       - name: Harden Runner
@@ -25,6 +26,9 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup lightwell-skills
+        uses: ./.github/actions/setup-lightwell-skills
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -38,5 +42,5 @@ jobs:
           LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
-          .cursor/skills/add-osv-to-renovate/scripts/process-renovate-prs.sh \
+          "${LIGHTWELL_SKILLS}/add-osv-to-renovate/scripts/process-renovate-prs.sh" \
             --pr "${{ github.event.pull_request.number }}"
