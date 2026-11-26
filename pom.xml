@@ -16,7 +16,6 @@
 
     <dependencies>
         <!-- Expected: Upgrades to next rhlw version in remediated -->
-        <!-- Source: https://packages.redhat.com/api/pulp-content/public-lightwell-demo/java/remediated/ -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
