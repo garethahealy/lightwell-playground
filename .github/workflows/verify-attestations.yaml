@@ -21,6 +21,11 @@ concurrency:
 jobs:
   verify-attestations:
     runs-on: ubuntu-latest
+    env:
+      LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
+      LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
+      LIGHTWELL_CLIENT_ID: ${{ secrets.LIGHTWELL_CLIENT_ID }}
+      LIGHTWELL_CLIENT_SECRET: ${{ secrets.LIGHTWELL_CLIENT_SECRET }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
@@ -49,15 +54,9 @@ jobs:
         uses: sigstore/cosign-installer@881c63bd87e38389154debd8331404ce7ca8a3ab # v4.1.4
 
       - name: Build
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: mvn clean install --batch-mode --settings=.m2/settings.xml
 
       - name: Verify Lightwell jars
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           shared="${LIGHTWELL_SKILLS}/lightwell-shared/scripts"

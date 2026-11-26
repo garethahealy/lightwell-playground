@@ -21,6 +21,11 @@ concurrency:
 jobs:
   upgrade-transitives:
     runs-on: ubuntu-latest
+    env:
+      LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
+      LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
+      LIGHTWELL_CLIENT_ID: ${{ secrets.LIGHTWELL_CLIENT_ID }}
+      LIGHTWELL_CLIENT_SECRET: ${{ secrets.LIGHTWELL_CLIENT_SECRET }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
@@ -46,9 +51,6 @@ jobs:
           python-version: "3.15"
 
       - name: Plan
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           python3 "${LIGHTWELL_SKILLS}/upgrade-transitives/scripts/plan.py" \
@@ -56,9 +58,6 @@ jobs:
             -o /tmp/transitive-plan.json
 
       - name: Collect
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           python3 "${LIGHTWELL_SKILLS}/upgrade-transitives/scripts/collect.py" \
@@ -67,9 +66,6 @@ jobs:
 
       - name: Apply
         id: apply
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           python3 "${LIGHTWELL_SKILLS}/upgrade-transitives/scripts/apply.py" \
@@ -78,9 +74,6 @@ jobs:
             -o /tmp/transitive-apply.json
 
       - name: Summary
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           python3 "${LIGHTWELL_SKILLS}/upgrade-transitives/scripts/summary.py" \

@@ -21,6 +21,11 @@ concurrency:
 jobs:
   upgrade-directs:
     runs-on: ubuntu-latest
+    env:
+      LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
+      LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
+      LIGHTWELL_CLIENT_ID: ${{ secrets.LIGHTWELL_CLIENT_ID }}
+      LIGHTWELL_CLIENT_SECRET: ${{ secrets.LIGHTWELL_CLIENT_SECRET }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
@@ -52,9 +57,6 @@ jobs:
             --pom pom.xml -o /tmp/direct-plan.json
 
       - name: Collect
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           python3 "${LIGHTWELL_SKILLS}/upgrade-directs/scripts/collect.py" \
@@ -63,9 +65,6 @@ jobs:
 
       - name: Apply
         id: apply
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           python3 "${LIGHTWELL_SKILLS}/upgrade-directs/scripts/apply.py" \
@@ -74,9 +73,6 @@ jobs:
             -o /tmp/direct-apply.json
 
       - name: Summary
-        env:
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           python3 "${LIGHTWELL_SKILLS}/upgrade-directs/scripts/summary.py" \
