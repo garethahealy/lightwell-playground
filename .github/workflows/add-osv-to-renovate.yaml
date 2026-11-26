@@ -18,6 +18,11 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+    env:
+      LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
+      LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
+      LIGHTWELL_CLIENT_ID: ${{ secrets.LIGHTWELL_CLIENT_ID }}
+      LIGHTWELL_CLIENT_SECRET: ${{ secrets.LIGHTWELL_CLIENT_SECRET }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
@@ -38,8 +43,6 @@ jobs:
       - name: Comment OSV summaries on Renovate PRs
         env:
           GH_TOKEN: ${{ github.token }}
-          LIGHTWELL_USERNAME: ${{ secrets.LIGHTWELL_USERNAME }}
-          LIGHTWELL_TOKEN: ${{ secrets.LIGHTWELL_TOKEN }}
         run: |
           set -euo pipefail
           "${LIGHTWELL_SKILLS}/add-osv-to-renovate/scripts/process-renovate-prs.sh" \
